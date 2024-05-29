@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export const Signup = () => {
+const Signup = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -16,8 +16,8 @@ export const Signup = () => {
   };
 
   return (
-    <div>
-      <h2>Signup</h2>
+    <div className="container">
+      <h2>Sign up</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label>Email:</label>
@@ -46,7 +46,7 @@ export const Signup = () => {
             required
           />
         </div>
-        <button type="submit">Signup</button>
+        <button type="submit">Sign up</button>
       </form>
     </div>
   );

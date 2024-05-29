@@ -3,15 +3,14 @@ import { Link } from 'react-router-dom';
 
 const App = () => {
   return (
-    <div>
-      <h1>Bienvenido a la Aplicación de Notas</h1>
+    <div className="container">
+      <h2>Bienvenido a la Aplicación de Notas</h2>
       <nav>
-        <button><Link to="/login">Login</Link></button>
-        <button><Link to="/signup">Signup</Link></button>
+        <Link to="/login">Log in</Link>
+        <Link to="/signup">Sign up</Link>
       </nav>
     </div>
   );
 };
 
 export default App;
-
