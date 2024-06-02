@@ -16,10 +16,9 @@ const pool = new Pool({
   port: process.env.PGPORT,
 });
 
-// Middleware
 app.use(bodyParser.json());
 app.use(cors({
-  origin: 'http://localhost:5173', // Asegúrate de que el frontend pueda acceder al backend
+  origin: 'http://localhost:5173',
   credentials: true,
 }));
 app.use(session({
@@ -28,7 +27,6 @@ app.use(session({
   saveUninitialized: true,
 }));
 
-// Rutas
 app.post('/register', async (req, res) => {
   const { username, password } = req.body;
   try {

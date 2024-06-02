@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Note from './Note';
+import Modal from 'react-modal';
+import { useNavigate } from 'react-router-dom';
+
+Modal.setAppElement('#root');
 
 const Notes = () => {
   const [notes, setNotes] = useState([]);
   const [noteText, setNoteText] = useState('');
   const [editingNote, setEditingNote] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [selectedNote, setSelectedNote] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchNotes = async () => {
@@ -54,7 +61,7 @@ const Notes = () => {
       setNotes(notes.map(note => (note.id === id ? res.data : note)));
       setIsEditing(false);
       setEditingNote(null);
-      setNoteText('');  // Limpiar el input después de actualizar la nota
+      setNoteText('');
     } catch (error) {
       console.error(error);
     }
@@ -72,9 +79,25 @@ const Notes = () => {
     setNoteText('');
   };
 
+  const openModal = (note) => {
+    setSelectedNote(note);
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+    setSelectedNote(null);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token'); // Elimina el token de autenticación
+    navigate('/login'); // Redirige al usuario a la página de inicio de sesión
+  };
+
   return (
     <div className="notes-container">
-      <h2>Notes</h2>
+      <h2>Notas</h2>
+      <button onClick={handleLogout} className="logout-button">Cerrar Sesión</button>
       <div className="note-input">
         <textarea 
           value={noteText}
@@ -88,14 +111,31 @@ const Notes = () => {
       </div>
       <div className="notes-list">
         {notes.map(note => (
-          <Note 
-            key={note.id}
-            note={note}
-            onDelete={handleDeleteNote}
-            onEdit={() => startEditing(note)}
-          />
+          <div key={note.id}>
+            <Note 
+              note={note}
+              onDelete={handleDeleteNote}
+              onEdit={() => startEditing(note)}
+              onDoubleClick={() => openModal(note)}
+            />
+          </div>
         ))}
       </div>
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        contentLabel="Note Modal"
+        className="modal"
+        overlayClassName="modal-overlay"
+      >
+        {selectedNote && (
+          <div>
+            <h2>Nota</h2>
+            <p className="note-content">{selectedNote.content}</p>
+            <button onClick={closeModal}>Close</button>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 };
